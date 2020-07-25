@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <style>
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <button v-on:click.once="warn('Form cannot be submitted yet.')">
+        Greet
+      </button>
+    </div>
+    <script type="text/javascript">
+      var example1 = new Vue({
+        el: "#app",
+        data: {
+          name: "Vue.js",
+        },
+        methods: {
+          warn(message, event) {
+            if (event) {
+              console.log(event);
+              event.preventDefault();
+            }
+            alert(message);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
