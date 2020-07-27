@@ -19,23 +19,30 @@
   </head>
   <body>
     <div id="app">
-      <button v-on:click.once="warn('Form cannot be submitted yet.')">
-        Greet
+      <button v-for="tab in tabs" :key="tab" @click="currentTab = tab">
+        {{tab}}
       </button>
+      <component :is="currentTabComponent"></component>
     </div>
     <script type="text/javascript">
+      Vue.component("tab-home", {
+        template: "<div>Home component</div>",
+      });
+      Vue.component("tab-posts", {
+        template: "<div>Posts component</div>",
+      });
+      Vue.component("tab-archive", {
+        template: "<div>Archive component</div>",
+      });
       var example1 = new Vue({
         el: "#app",
         data: {
-          name: "Vue.js",
+          currentTab: "Home",
+          tabs: ["Home", "Posts", "Archive"],
         },
-        methods: {
-          warn(message, event) {
-            if (event) {
-              console.log(event);
-              event.preventDefault();
-            }
-            alert(message);
+        computed: {
+          currentTabComponent: function () {
+            return "tab-" + this.currentTab.toLowerCase();
           },
         },
       });
