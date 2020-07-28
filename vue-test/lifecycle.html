@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>生命周期</h1>
+      <p>{{foo}}</p>
+    </div>
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data: {
+          foo: "foo",
+          bar: "",
+        },
+        beforeCreate() {
+          console.log("beforeCreate");
+        },
+        created() {
+          console.log("created " + this.$el);
+        },
+        beforeMount() {
+          console.log("beforeMount");
+        },
+        mounted() {
+          setTimeout(() => {
+            this.foo = "fooooooo";
+          }, 2000);
+          console.log("mounted " + this.$el);
+        },
+        beforeUpdate() {
+          console.log("beforeUpdate");
+        },
+        updated() {
+          console.log("updated");
+        },
+        computed: {
+          bar() {
+            console.log("computed:", this.foo);
+            return this.foo;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

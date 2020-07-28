@@ -3,53 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>购物车</title>
     <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script> -->
     <style>
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: opacity 0.5s;
-      }
-      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        opacity: 0;
+      .active {
+        background-color: #ddd;
       }
     </style>
   </head>
   <body>
     <div id="app">
-      <base-input
-        :style="{color:showColor}"
-        v-on:focus.native="onFocus"
-      ></base-input>
+      <h2 :title="title">{{title}}</h2>
+      <input type="text" v-model="course" v-on:keydown.enter="addCourse" />
+      <button @click="addCourse">add</button>
+      <button @click="courses=[]">clear</button>
+      <div
+        v-for="c in courses"
+        :key="c"
+        @click="active=c"
+        :style="{backgroundColor: (active === c? '#ddd' : 'transparent')}"
+      >
+        {{ c }}
+      </div>
+      <p>{{total}}</p>
     </div>
     <script type="text/javascript">
-      Vue.component("base-input", {
-        props: ["label", "value"],
-        template: `<label>
-        {{ label }}
-        <input
-          v-bind="$attrs"
-          v-bind:value="value"
-          v-on:input="$emit('input', $event.target.value)"
-        >
-      </label>`,
-      });
-
-      var example1 = new Vue({
+      function getCourses() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(["web全栈", "web高级"]);
+          }, 2000);
+        });
+      }
+      const app = new Vue({
         el: "#app",
-        data: {
-          showColor: "red",
+        data() {
+          return {
+            title: "开课吧购物车",
+            active: "",
+            course: "",
+            courses: [],
+          };
+        },
+        async created() {
+          const courses = await getCourses();
+          this.courses = courses;
         },
         computed: {
-          currentTabComponent: function () {
-            return "tab-" + this.currentTab.toLowerCase();
+          total() {
+            return this.courses.length + "门";
           },
         },
         methods: {
-          onFocus: function () {
-            this.showColor = "green";
+          addCourse() {
+            if (this.course) {
+              this.courses.push(this.course);
+              this.course = "";
+            }
           },
         },
       });
