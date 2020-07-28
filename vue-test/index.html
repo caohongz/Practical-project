@@ -19,30 +19,37 @@
   </head>
   <body>
     <div id="app">
-      <button v-for="tab in tabs" :key="tab" @click="currentTab = tab">
-        {{tab}}
-      </button>
-      <component :is="currentTabComponent"></component>
+      <base-input
+        :style="{color:showColor}"
+        v-on:focus.native="onFocus"
+      ></base-input>
     </div>
     <script type="text/javascript">
-      Vue.component("tab-home", {
-        template: "<div>Home component</div>",
+      Vue.component("base-input", {
+        props: ["label", "value"],
+        template: `<label>
+        {{ label }}
+        <input
+          v-bind="$attrs"
+          v-bind:value="value"
+          v-on:input="$emit('input', $event.target.value)"
+        >
+      </label>`,
       });
-      Vue.component("tab-posts", {
-        template: "<div>Posts component</div>",
-      });
-      Vue.component("tab-archive", {
-        template: "<div>Archive component</div>",
-      });
+
       var example1 = new Vue({
         el: "#app",
         data: {
-          currentTab: "Home",
-          tabs: ["Home", "Posts", "Archive"],
+          showColor: "red",
         },
         computed: {
           currentTabComponent: function () {
             return "tab-" + this.currentTab.toLowerCase();
+          },
+        },
+        methods: {
+          onFocus: function () {
+            this.showColor = "green";
           },
         },
       });
