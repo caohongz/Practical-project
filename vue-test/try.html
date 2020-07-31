@@ -3,18 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>购物车</title>
-    <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script> -->
+    <script src="./js/vue.js"></script>
+    <title>开课吧购物车</title>
     <style>
       .active {
-        background-color: #ddd;
+        background-color: azure;
       }
       .message-box {
         padding: 10px 20px;
-        background: #4fc08d;
-        border: 1px solid #42b983;
+        background: green;
+        border: 1px solid green;
       }
       .message-box-close {
         float: right;
@@ -24,41 +22,37 @@
   <body>
     <div id="app">
       <message :show.sync="isShow">
-        <template v-slot:title>
-          <h2>恭喜</h2>
-        </template>
-        <template>
-          新增课程成功！
-        </template>
+        新增课程成功
       </message>
-      <h2 :title="title">{{title}}</h2>
+      <p :title="title">{{title}}</p>
       <course-add
         v-model="course"
         @add-course="addCourse"
         @del-course="delCourses"
       ></course-add>
-      <p v-if="courses.length===0">没有课程</p>
-      <courses-list v-bind:courses="courses"></courses-list>
-      <p>{{total}}</p>
+      <div v-if="courses.length===0">
+        没有课程
+      </div>
+      <courses-list :courses="courses"></courses-list>
+      <p>{{count}}</p>
     </div>
     <script type="text/javascript">
       Vue.component("message", {
         props: ["show"],
         template: `
           <div class="message-box" v-if="show">
-            <slot name="title"></slot>
             <slot></slot>
-            <span class="message-box-close" @click="$emit('update:show', false)">X</span>
+            <span class="message-box-close" @click="$emit('update:show',false)">X</span>
           </div>
         `,
       });
       Vue.component("course-add", {
         props: ["value"],
         methods: {
-          addCourse() {
+          addCourse(e) {
             this.$emit("add-course");
           },
-          delCourses() {
+          delCourse() {
             this.$emit("del-course");
           },
           onInput(e) {
@@ -73,51 +67,33 @@
           },
         },
         template: `
-        <div>
-        <input v-focus type="text" :value="value"
-        @input="onInput" v-on:keydown.enter="addCourse" />
-      <button @click="addCourse">add</button>
-      <button @click="delCourses">clear</button>
-      </div>
-      `,
+          <div>
+            <input type="text" v-focus :value="value" @input="onInput"  v-on:keydown.enter="addCourse" />
+            <button @click="addCourse">add</button>
+            <button @click="delCourse">clear</button>
+          </div>
+        `,
       });
       Vue.component("courses-list", {
-        props: {
-          courses: {
-            type: Array,
-            default: [],
-          },
-        },
+        props: ["courses"],
         data() {
           return {
             active: "",
           };
         },
-        directives: {
-          focus: {
-            inserted: function (el) {
-              el.focus();
-            },
-          },
-        },
         template: `
         <div v-else>
-        <div
-        v-for="c in courses"
-        :key="c"
-        @click="active=c"
-        :style="{backgroundColor: (active === c? '#ddd' : 'transparent')}"
-      >
-        {{ c }}
-      </div>
-      </div>
-      `,
+          <div v-for="c in courses" :key="c.id" :class="{active:active===c}" @click="active=c">
+            {{ c }}
+          </div>
+        </div>
+        `,
       });
       function getCourses() {
         return new Promise((resolve) => {
           setTimeout(() => {
             resolve(["web全栈", "web高级"]);
-          }, 2000);
+          }, 1000);
         });
       }
       const app = new Vue({
@@ -131,11 +107,10 @@
           };
         },
         async created() {
-          const courses = await getCourses();
-          this.courses = courses;
+          this.courses = await getCourses();
         },
         computed: {
-          total() {
+          count() {
             return this.courses.length + "门";
           },
         },
@@ -145,10 +120,6 @@
               this.courses.push(this.course);
               this.course = "";
               this.isShow = true;
-              let vm = this;
-              // setTimeout(() => {
-              //   vm.isShow = false;
-              // }, 1000);
             }
           },
           delCourses() {
