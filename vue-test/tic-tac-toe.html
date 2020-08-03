@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <title>tic-tac-toe</title>
+    <style>
+      .body {
+        font-size: medium;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="game">
+        <div class="game-board">
+          <div class="board-row" v-for="(row,index) in board" :key="index">
+            <button
+              class="square"
+              v-for="square in row"
+              @click="handleChange(square)"
+              :key="square"
+            >
+              {{history[history.length-1].squares[square]}}
+            </button>
+          </div>
+        </div>
+        <div class="game-info">
+          <p>{{desc}}</p>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      function winnerCal(squares) {
+        let lists = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 4, 8],
+          [1, 4, 7],
+          [2, 4, 6],
+          [2, 5, 8],
+          [0, 3, 6],
+        ];
+        for (let i = 0; i < lists.length; i++) {
+          const [a, b, c] = lists[i];
+          // console.log("cal", squares);
+          if (
+            squares[a] &&
+            squares[a] === squares[b] &&
+            squares[a] === squares[c]
+          ) {
+            return squares[a];
+          }
+        }
+      }
+      const app = new Vue({
+        el: "#app",
+        data() {
+          return {
+            history: [
+              {
+                squares: Array(9).fill(null),
+                step: -1,
+              },
+            ],
+            board: [
+              [0, 1, 2],
+              [3, 4, 5],
+              [6, 7, 8],
+            ],
+            desc: "",
+            xisNext: true,
+          };
+        },
+        watch: {
+          history: {
+            deep: true,
+            immediate: true,
+            handler(newValue, oldValue) {
+              const current = this.history[this.history.length - 1].squares;
+              const winner = winnerCal(current);
+              console.log("winner", winner);
+              if (winner) {
+                this.desc = "winner is " + winner;
+              } else {
+                this.desc = "Next is " + (this.xisNext ? "X" : "O");
+              }
+            },
+          },
+        },
+
+        methods: {
+          handleChange(square) {
+            if (
+              this.history[this.history.length - 1].squares[square] ||
+              winnerCal(this.history[this.history.length - 1].squares)
+            ) {
+              return;
+            }
+            console.log("this");
+
+            const history = this.history[this.history.length - 1];
+            history.squares[square] = this.xisNext ? "X" : "O";
+            history.step = square;
+            this.history.push(history);
+            // this.$set(this.squares, square, this.xisNext ? "X" : "O");
+            this.xisNext = !this.xisNext;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

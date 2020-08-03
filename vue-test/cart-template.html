@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>购物车</title>
+    <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script> -->
+    <style>
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+      }
+      .active {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/javascript">
+      const app = new Vue({
+        el: "#app",
+        data() {
+          return {
+            title: "开课吧购物车",
+            selectedCourse: "",
+            course: "",
+            courses: ["web全栈", "web高级"],
+          };
+        },
+        methods: {
+          addCourse() {
+            if (this.course) {
+              this.courses.push(this.course);
+              this.course = "";
+            }
+          },
+        },
+        render() {
+          with (this) {
+          return _c("div", { attrs: { id: "app" } }, [
+            _c("h2", { attrs: { title: title } }, [
+              _v("\n        " + _s(title) + "\n      "),
+            ]),
+            _v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: course,
+                  expression: "course",
+                },
+              ],
+              attrs: { type: "text" },
+              domProps: { value: course },
+              on: {
+                keydown: function ($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  )
+                    return null;
+                  return addCourse($event);
+                },
+                input: function ($event) {
+                  if ($event.target.composing) return;
+                  course = $event.target.value;
+                },
+              },
+            }),
+            _v(" "),
+            _c("button", { on: { click: addCourse } }, [_v("add")]),
+            _v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function ($event) {
+                    courses = [];
+                  },
+                },
+              },
+              [_v("clear")]
+            ),
+            _v(" "),
+            courses.length === 0
+              ? _c("div", [_c("p", [_v("没有任何课程信息")])])
+              : _c(
+                  "div",
+                  { staticClass: "course-list" },
+                  _l(courses, function (course) {
+                    return _c(
+                      "div",
+                      {
+                        key: course,
+                        style: {
+                          backgroundColor:
+                            selectedCourse === course ? "#ddd" : "transparent",
+                        },
+                        on: {
+                          click: function ($event) {
+                            selectedCourse = course;
+                          },
+                        },
+                      },
+                      [_v("\n          " + _s(course) + "\n        ")]
+                    );
+                  }),
+                  0
+                ),
+          ]);
+        }
+      }
+
+      });
+      (function anonymous() {
+        ;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/vue.js"></script>
+    <title>开课吧购物车</title>
+    <style>
+      .active {
+        background-color: azure;
+      }
+      .message-box {
+        padding: 10px 20px;
+        background: green;
+        border: 1px solid green;
+      }
+      .message-box-close {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <message :show.sync="isShow">
+        新增课程成功
+      </message>
+      <p :title="title">{{title}}</p>
+      <course-add
+        v-model="course"
+        @add-course="addCourse"
+        @del-course="delCourses"
+      ></course-add>
+      <div v-if="courses.length===0">
+        没有课程
+      </div>
+      <courses-list :courses="courses"></courses-list>
+      <p>{{count}}</p>
+    </div>
+    <script type="text/javascript">
+      Vue.component("message", {
+        props: ["show"],
+        template: `
+          <div class="message-box" v-if="show">
+            <slot></slot>
+            <span class="message-box-close" @click="$emit('update:show',false)">X</span>
+          </div>
+        `,
+      });
+      Vue.component("course-add", {
+        props: ["value"],
+        methods: {
+          addCourse(e) {
+            this.$emit("add-course");
+          },
+          delCourse() {
+            this.$emit("del-course");
+          },
+          onInput(e) {
+            this.$emit("input", e.target.value);
+          },
+        },
+        directives: {
+          focus: {
+            inserted: function (el) {
+              el.focus();
+            },
+          },
+        },
+        template: `
+          <div>
+            <input type="text" v-focus :value="value" @input="onInput"  v-on:keydown.enter="addCourse" />
+            <button @click="addCourse">add</button>
+            <button @click="delCourse">clear</button>
+          </div>
+        `,
+      });
+      Vue.component("courses-list", {
+        props: ["courses"],
+        data() {
+          return {
+            active: "",
+          };
+        },
+        template: `
+        <div v-else>
+          <div v-for="c in courses" :key="c.id" :class="{active:active===c}" @click="active=c">
+            {{ c }}
+          </div>
+        </div>
+        `,
+      });
+      function getCourses() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(["web全栈", "web高级"]);
+          }, 1000);
+        });
+      }
+      const app = new Vue({
+        el: "#app",
+        data() {
+          return {
+            title: "开课吧购物车",
+            course: "",
+            courses: [],
+            isShow: false,
+          };
+        },
+        async created() {
+          this.courses = await getCourses();
+        },
+        computed: {
+          count() {
+            return this.courses.length + "门";
+          },
+        },
+        methods: {
+          addCourse() {
+            if (this.course) {
+              this.courses.push(this.course);
+              this.course = "";
+              this.isShow = true;
+            }
+          },
+          delCourses() {
+            this.courses = [];
+            this.course = "";
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

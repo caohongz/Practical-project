@@ -3,53 +3,219 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>购物车</title>
     <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script src="./plugins/heading.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script> -->
     <style>
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: opacity 0.5s;
-      }
-      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        opacity: 0;
+      .active {
+        background-color: #ddd;
       }
     </style>
+    <script src="https://at.alicdn.com/t/font_1982541_55o7ms8gqes.js"></script>
   </head>
   <body>
     <div id="app">
-      <base-input
-        :style="{color:showColor}"
-        v-on:focus.native="onFocus"
-      ></base-input>
+      <message ref="msgSuccess" class="success">
+        <template v-slot:title>
+          <h2>恭喜</h2>
+        </template>
+        <template>
+          新增课程成功！
+        </template>
+      </message>
+      <message ref="msgWarning" class="warning">
+        <template v-slot:title>
+          <h2>恭喜</h2>
+        </template>
+        <template>
+          新增课程成功！
+        </template>
+      </message>
+      <heading :level="level" icon="cart">{{title}}</heading>
+      <button v-permission="'admin'" @click="$bus.$emit('message-close')">
+        清除所有通知
+      </button>
+      <course-add
+        v-model="course"
+        @add-course="addCourse"
+        @del-course="delCourses"
+      ></course-add>
+      <p v-if="courses.length===0">没有课程</p>
+      <courses-list v-bind:courses="courses"></courses-list>
+      <p>{{total}}</p>
     </div>
     <script type="text/javascript">
-      Vue.component("base-input", {
-        props: ["label", "value"],
-        template: `<label>
-        {{ label }}
-        <input
-          v-bind="$attrs"
-          v-bind:value="value"
-          v-on:input="$emit('input', $event.target.value)"
-        >
-      </label>`,
-      });
+      const role = "admin";
+      Vue.prototype.$bus = new Vue();
+      // heading组件
 
-      var example1 = new Vue({
+      Vue.directive("permission", {
+        inserted(el, binding) {
+          if (role !== binding.value) {
+            el.parentElement.removeChild(el);
+          }
+        },
+      });
+      const helloMixin = {
+        created() {
+          this.hello();
+        },
+        methods: {
+          hello() {
+            console.log("say hello from mixin");
+          },
+        },
+      };
+      Vue.component("message", {
+        mixins: [helloMixin],
+        data() {
+          return {
+            show: false,
+          };
+        },
+        template: `
+        <transition name="fade">
+          <div class="message-box" v-if="show">
+            <slot name="title" title="通过message添加"></slot>
+            <slot></slot>
+            <span class="message-box-close" @click="toggle">X</span>
+          </div>
+          </transition>
+        `,
+        methods: {
+          toggle() {
+            this.show = !this.show;
+          },
+        },
+        mounted() {
+          this.$bus.$on("message-close", () => {
+            this.toggle();
+          });
+        },
+      });
+      Vue.component("course-add", {
+        props: ["value"],
+        methods: {
+          addCourse() {
+            this.$emit("add-course");
+          },
+          delCourses() {
+            this.$emit("del-course");
+          },
+          onInput(e) {
+            this.$emit("input", e.target.value);
+          },
+        },
+        directives: {
+          focus: {
+            inserted: function (el) {
+              el.focus();
+            },
+          },
+        },
+        template: `
+        <div>
+        <input v-focus type="text" :value="value"
+        @input="onInput" v-on:keydown.enter="addCourse" />
+      <button @click="addCourse">add</button>
+      <button @click="delCourses">clear</button>
+      </div>
+      `,
+      });
+      Vue.component("courses-list", {
+        props: {
+          courses: {
+            type: Array,
+            default: [],
+          },
+        },
+        data() {
+          return {
+            active: "",
+          };
+        },
+        directives: {
+          focus: {
+            inserted: function (el) {
+              el.focus();
+            },
+          },
+        },
+        filters: {
+          currency: function (value, symbol = "￥") {
+            return symbol + value;
+          },
+        },
+        template: `
+        <div v-else>
+         
+        <div
+        v-for="c,index in courses"
+        :key="index"
+        @click="active=c"
+        :style="{backgroundColor: (active === c? '#ddd' : 'transparent')}"
+      >
+        {{ c.name }} - {{c.price | currency("$")}}
+      </div>
+
+      </div>
+      `,
+      });
+      function getCourses() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve([{ name: "web全栈" }, { name: "web高级" }]);
+          }, 1000);
+        });
+      }
+      const app = new Vue({
         el: "#app",
-        data: {
-          showColor: "red",
+        data() {
+          return {
+            title: "开课吧购物车",
+            course: "",
+            courses: [],
+            price: 0,
+            level: 2,
+          };
+        },
+        async created() {
+          const courses = await getCourses();
+
+          this.courses = courses;
         },
         computed: {
-          currentTabComponent: function () {
-            return "tab-" + this.currentTab.toLowerCase();
+          total() {
+            return this.courses.length + "门";
+          },
+        },
+        watch: {
+          courses(newValue, oldValue) {
+            this.courses.forEach((item) => {
+              this.$set(item, "price", this.price);
+            });
           },
         },
         methods: {
-          onFocus: function () {
-            this.showColor = "green";
+          addCourse() {
+            if (this.course) {
+              const courses = { name: this.course };
+              this.courses.push(courses);
+              this.course = "";
+              this.$refs.msgSuccess.toggle();
+              let vm = this;
+              // setTimeout(() => {
+              //   vm.isShow = false;
+              // }, 1000);
+            } else {
+              this.$refs.msgWarning.toggle();
+            }
+          },
+          delCourses() {
+            this.courses = [];
+            this.course = "";
           },
         },
       });
