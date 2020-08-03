@@ -5,19 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>购物车</title>
     <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
+<<<<<<< HEAD
     <script src="./plugins/heading.js"></script>
+=======
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
     <!-- <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script> -->
     <style>
       .active {
         background-color: #ddd;
+<<<<<<< HEAD
+=======
+      }
+      .message-box {
+        padding: 10px 20px;
+        background: #4fc08d;
+        border: 1px solid #42b983;
+      }
+      .message-box-close {
+        float: right;
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
       }
     </style>
     <script src="https://at.alicdn.com/t/font_1982541_55o7ms8gqes.js"></script>
   </head>
   <body>
     <div id="app">
+<<<<<<< HEAD
       <message ref="msgSuccess" class="success">
+=======
+      <message :show.sync="isShow">
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
         <template v-slot:title>
           <h2>恭喜</h2>
         </template>
@@ -25,6 +43,7 @@
           新增课程成功！
         </template>
       </message>
+<<<<<<< HEAD
       <message ref="msgWarning" class="warning">
         <template v-slot:title>
           <h2>恭喜</h2>
@@ -37,6 +56,9 @@
       <button v-permission="'admin'" @click="$bus.$emit('message-close')">
         清除所有通知
       </button>
+=======
+      <h2 :title="title">{{title}}</h2>
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
       <course-add
         v-model="course"
         @add-course="addCourse"
@@ -47,6 +69,7 @@
       <p>{{total}}</p>
     </div>
     <script type="text/javascript">
+<<<<<<< HEAD
       const role = "admin";
       Vue.prototype.$bus = new Vue();
       // heading组件
@@ -124,6 +147,47 @@
       </div>
       `,
       });
+=======
+      Vue.component("message", {
+        props: ["show"],
+        template: `
+          <div class="message-box" v-if="show">
+            <slot name="title"></slot>
+            <slot></slot>
+            <span class="message-box-close" @click="$emit('update:show', false)">X</span>
+          </div>
+        `,
+      });
+      Vue.component("course-add", {
+        props: ["value"],
+        methods: {
+          addCourse() {
+            this.$emit("add-course");
+          },
+          delCourses() {
+            this.$emit("del-course");
+          },
+          onInput(e) {
+            this.$emit("input", e.target.value);
+          },
+        },
+        directives: {
+          focus: {
+            inserted: function (el) {
+              el.focus();
+            },
+          },
+        },
+        template: `
+        <div>
+        <input v-focus type="text" :value="value"
+        @input="onInput" v-on:keydown.enter="addCourse" />
+      <button @click="addCourse">add</button>
+      <button @click="delCourses">clear</button>
+      </div>
+      `,
+      });
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
       Vue.component("courses-list", {
         props: {
           courses: {
@@ -143,6 +207,7 @@
             },
           },
         },
+<<<<<<< HEAD
         filters: {
           currency: function (value, symbol = "￥") {
             return symbol + value;
@@ -160,14 +225,31 @@
         {{ c.name }} - {{c.price | currency("$")}}
       </div>
 
+=======
+        template: `
+        <div v-else>
+        <div
+        v-for="c in courses"
+        :key="c"
+        @click="active=c"
+        :style="{backgroundColor: (active === c? '#ddd' : 'transparent')}"
+      >
+        {{ c }}
+      </div>
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
       </div>
       `,
       });
       function getCourses() {
         return new Promise((resolve) => {
           setTimeout(() => {
+<<<<<<< HEAD
             resolve([{ name: "web全栈" }, { name: "web高级" }]);
           }, 1000);
+=======
+            resolve(["web全栈", "web高级"]);
+          }, 2000);
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
         });
       }
       const app = new Vue({
@@ -177,18 +259,26 @@
             title: "开课吧购物车",
             course: "",
             courses: [],
+<<<<<<< HEAD
             price: 0,
             level: 2,
+=======
+            isShow: false,
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
           };
         },
         async created() {
           const courses = await getCourses();
+<<<<<<< HEAD
 
+=======
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
           this.courses = courses;
         },
         computed: {
           total() {
             return this.courses.length + "门";
+<<<<<<< HEAD
           },
         },
         watch: {
@@ -196,21 +286,32 @@
             this.courses.forEach((item) => {
               this.$set(item, "price", this.price);
             });
+=======
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
           },
         },
         methods: {
           addCourse() {
             if (this.course) {
+<<<<<<< HEAD
               const courses = { name: this.course };
               this.courses.push(courses);
               this.course = "";
               this.$refs.msgSuccess.toggle();
+=======
+              this.courses.push(this.course);
+              this.course = "";
+              this.isShow = true;
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
               let vm = this;
               // setTimeout(() => {
               //   vm.isShow = false;
               // }, 1000);
+<<<<<<< HEAD
             } else {
               this.$refs.msgWarning.toggle();
+=======
+>>>>>>> bfe83a3aa6ad4e8d5b9fa02c7633da1fab026e8c
             }
           },
           delCourses() {
