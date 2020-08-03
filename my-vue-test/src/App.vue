@@ -1,32 +1,84 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <Message ref="msgSuccess" class="success">
+      <template v-slot:title>
+        <h2>恭喜</h2>
+      </template>
+      <template>
+        新增课程成功！
+      </template>
+    </Message>
+    <Message ref="msgWarning" class="warning">
+      <template>
+        失败
+      </template>
+    </Message>
+    <p :title="title">{{ title }}</p>
+    <CourseAdd
+      v-model="course"
+      @add-course="addCourse"
+      @clear-course="clearCourse"
+    ></CourseAdd>
+    <CourseList :courses="courses"></CourseList>
+    <p>{{ total }}</p>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import CourseList from "@/components/CoursesList";
+import CourseAdd from "@/components/CourseAdd";
+import Message from "@/components/Message";
+import { getCourses } from "@/api/index";
 
-#nav {
-  padding: 30px;
-}
+export default {
+  name: "App",
+  components: {
+    CourseList,
+    CourseAdd,
+    Message,
+  },
+  data() {
+    return {
+      title: "开课吧购物车",
+      course: "",
+      courses: [],
+      price: 0,
+    };
+  },
+  async created() {
+    this.courses = await getCourses();
+  },
+  watch: {
+    // eslint-disable-next-line
+    courses(newValue, oldValue) {
+      this.courses.forEach((item) => {
+        this.$set(item, "price", this.price);
+      });
+    },
+  },
+  computed: {
+    total() {
+      return this.courses.length + "门";
+    },
+  },
+  methods: {
+    addCourse() {
+      if (this.course) {
+        const courses = { name: this.course };
+        this.courses.push(courses);
+        console.log(this.courses);
+        this.course = "";
+        this.$refs.msgSuccess.toggle();
+      } else {
+        this.$refs.msgWarning.toggle();
+      }
+    },
+    clearCourse() {
+      this.courses = [];
+      this.course = "";
+    },
+  },
+};
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>
