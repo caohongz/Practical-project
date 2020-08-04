@@ -1,84 +1,35 @@
 <template>
   <div id="app">
-    <Message ref="msgSuccess" class="success">
-      <template v-slot:title>
-        <h2>恭喜</h2>
-      </template>
-      <template>
-        新增课程成功！
-      </template>
-    </Message>
-    <Message ref="msgWarning" class="warning">
-      <template>
-        失败
-      </template>
-    </Message>
-    <p :title="title">{{ title }}</p>
-    <CourseAdd
-      v-model="course"
-      @add-course="addCourse"
-      @clear-course="clearCourse"
-    ></CourseAdd>
-    <CourseList :courses="courses"></CourseList>
-    <p>{{ total }}</p>
+    <nav class="nav">
+      <router-link to="/">首页</router-link>
+      <router-link to="/admin">管理</router-link>
+      <span v-if="isLogin">
+        {{ welcome }}
+        <button @click="logout">注销</button>
+      </span>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import CourseList from "@/components/CoursesList";
-import CourseAdd from "@/components/CourseAdd";
-import Message from "@/components/Message";
-import { getCourses } from "@/api/courses";
-
+import { mapState, mapGetters } from "vuex";
 export default {
-  name: "App",
-  components: {
-    CourseList,
-    CourseAdd,
-    Message,
-  },
-  data() {
-    return {
-      title: "开课吧购物车",
-      course: "",
-      courses: [],
-      price: 0,
-    };
-  },
-  async created() {
-    this.courses = await getCourses();
-  },
-  watch: {
-    // eslint-disable-next-line
-    courses(newValue, oldValue) {
-      this.courses.forEach((item) => {
-        this.$set(item, "price", this.price);
-      });
-    },
-  },
   computed: {
-    total() {
-      return this.courses.length + "门";
-    },
+    ...mapState("user", ["isLogin"]),
+    ...mapGetters("user", ["welcome"]),
   },
   methods: {
-    addCourse() {
-      if (this.course) {
-        const courses = { name: this.course };
-        this.courses.push(courses);
-        console.log(this.courses);
-        this.course = "";
-        this.$refs.msgSuccess.toggle();
-      } else {
-        this.$refs.msgWarning.toggle();
-      }
-    },
-    clearCourse() {
-      this.courses = [];
-      this.course = "";
+    logout() {
+      this.$store.commit("user/logout");
+      this.$router.push("/");
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+.nav {
+  margin: 10px;
+}
+</style>

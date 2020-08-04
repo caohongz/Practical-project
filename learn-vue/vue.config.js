@@ -7,6 +7,6 @@ module.exports = {
         }, 1000);
       });
     },
-    proxy: "http://localhost:3000",
+    // proxy: "http://localhost:3000",
   },
 };

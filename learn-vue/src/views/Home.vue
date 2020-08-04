@@ -8,14 +8,10 @@
 export default {
   data() {
     return {
-      message: "hello Vue~",
+      message: "Hello,Vue~",
     };
   },
 };
 </script>
 
-<style scoped>
-.body {
-  font-size: 20px;
-}
-</style>
+<style lang="scss" scoped></style>

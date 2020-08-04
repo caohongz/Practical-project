@@ -7,9 +7,11 @@
           v-for="(c, index) in courses"
           :key="index"
           :class="{ active: active === c }"
-          @click="active = c"
+          @click="onClick(c)"
         >
+          <!-- <router-link :to="`/admin/course/${c.name}`"> -->
           {{ c.name }} -- {{ c.price | currency }}
+          <!-- </router-link> -->
         </div>
       </transition-group>
     </div>
@@ -31,6 +33,15 @@ export default {
   filters: {
     currency: function(value, symbol = "￥") {
       return symbol + value;
+    },
+  },
+  methods: {
+    onClick(c) {
+      this.active = c;
+      this.$router.push({
+        name: "detail",
+        params: { name: c.name },
+      });
     },
   },
 };

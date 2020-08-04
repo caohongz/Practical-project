@@ -1,8 +1,61 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
+import VueRouter from "vue-router";
+import Home from "@/views/Home";
+import Admin from "@/views/admin";
+import Detail from "@/views/Detail";
+import store from "./store";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
+Vue.use(VueRouter);
+const routes = [
+  { path: "/", component: Home },
+  { path: "/login", name: "login", component: () => import("@/views/Login") },
+  {
+    path: "/admin",
+    component: Admin,
+    children: [
+      {
+        path: "course/:name",
+        name: "detail",
+        component: Detail,
+      },
+    ],
+    meta: {
+      auth: true,
+    },
+    // beforeEnter(to, from, next) {
+    //   // 判断路由是否需要守卫
+
+    //   if (window.isLogin) {
+    //     next();
+    //   } else {
+    //     next("/login?redirect=" + to.fullPath);
+    //   }
+    // },
+  },
+  // { path: "/course/:name", component: Detail },
+  { path: "*", component: () => import("@/views/_404") },
+];
+
+const router = new VueRouter({
+  routes,
+});
+router.beforeEach((to, from, next) => {
+  // 判断路由是否需要守卫
+  if (to.meta.auth) {
+    if (store.state.user.isLogin) {
+      next();
+    } else {
+      next("/login?redirect=" + to.fullPath);
+    }
+  } else {
+    next();
+  }
+});
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  router,
+  store,
+  render: (h) => h(App),
+}).$mount("#app");
