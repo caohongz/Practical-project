@@ -5,7 +5,7 @@ import Home from "@/views/Home";
 import Admin from "@/views/admin";
 import Detail from "@/views/Detail";
 import store from "./store";
-import './plugins/element.js'
+import "./plugins/element.js";
 
 Vue.config.productionTip = false;
 
@@ -36,6 +36,7 @@ const routes = [
     //   }
     // },
   },
+  { path: "/child", component: () => import("@/components/Bus/index") },
   // { path: "/course/:name", component: Detail },
   { path: "*", component: () => import("@/views/_404") },
 ];
@@ -55,6 +56,24 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+class Bus {
+  constructor() {
+    this.callbacks = {};
+  }
+  $on(name, fn) {
+    this.callbacks[name] = this.callbacks[name] || [];
+    this.callbacks[name].push(fn);
+  }
+  $emit(name, args) {
+    if (this.callbacks[name]) {
+      this.callbacks[name].forEach((cb) => cb(args));
+    }
+  }
+}
+
+Vue.prototype.$bus = new Bus();
+
 new Vue({
   router,
   store,
