@@ -5,6 +5,7 @@ import Home from "@/views/Home";
 import Admin from "@/views/admin";
 import Detail from "@/views/Detail";
 import store from "./store";
+import './plugins/element.js'
 
 Vue.config.productionTip = false;
 
