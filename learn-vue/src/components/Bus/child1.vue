@@ -12,7 +12,10 @@ export default {
   },
   mounted() {
     this.$emit("some-event", "hello");
-    this.$bus.$on("event-from-child2", (msg) => {
+    // this.$bus.$on("event-from-child2", (msg) => {
+    //   console.log("Child1: ", msg);
+    // });
+    this.$parent.$on("event-from-child2", (msg) => {
       console.log("Child1: ", msg);
     });
   },
