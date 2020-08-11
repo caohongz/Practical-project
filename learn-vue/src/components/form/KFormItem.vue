@@ -12,6 +12,8 @@
 <script>
 import Schema from "async-validator";
 export default {
+  name: "KFormItem",
+  componentName: "KFormItem",
   inject: ["form"],
   data() {
     return {
@@ -41,6 +43,7 @@ export default {
         [this.prop]: rules,
       };
       const validator = new Schema(descriptor);
+      // console.log(this.$parent.$parent.$options._componentTag);
       return validator.validate({ [this.prop]: value }, (errors) => {
         if (errors) {
           this.error = errors[0].message;

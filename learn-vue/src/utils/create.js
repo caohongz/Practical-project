@@ -9,7 +9,7 @@ export function create(Component, props) {
     document.body.removeChild(comp.$el);
     comp.$destroy();
   };
-  console.log("test", comp);
+  // console.log("test", comp);
 
   // const vm = new Vue({
   //   render(h) {

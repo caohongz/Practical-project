@@ -10,6 +10,7 @@
       </span>
     </nav>
     <router-view></router-view> -->
+    <!-- <FormExample></FormExample> -->
     <FormExample></FormExample>
   </div>
 </template>
@@ -17,6 +18,7 @@
 <script>
 // import { mapState, mapGetters } from "vuex";
 import FormExample from "./components/form/index";
+// import TicTacToe from "./components/TicTacToe/index";
 export default {
   components: { FormExample },
   // data() {
