@@ -11,6 +11,8 @@
 
 <script>
 import Schema from "async-validator";
+import mixins from "@/mixins/mixins";
+
 export default {
   name: "KFormItem",
   componentName: "KFormItem",
@@ -20,6 +22,7 @@ export default {
       error: "",
     };
   },
+  mixins: [mixins],
   props: {
     label: {
       type: String,
@@ -34,6 +37,7 @@ export default {
     this.$on("validate", () => {
       this.validate();
     });
+    this.dispatch("KForm", "set-field", [this]);
   },
   methods: {
     validate() {

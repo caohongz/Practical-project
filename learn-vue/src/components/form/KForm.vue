@@ -6,11 +6,14 @@
 
 <script>
 export default {
+  name: "KForm",
+  componentName: "KForm",
   provide() {
     return {
       form: this,
     };
   },
+
   props: {
     model: {
       type: Object,
@@ -18,9 +21,21 @@ export default {
     },
     rules: Object,
   },
+  data() {
+    return {
+      fields: [],
+    };
+  },
+  created() {
+    this.$on("set-field", (field) => {
+      if (field) {
+        this.fields.push(field);
+      }
+    });
+  },
   methods: {
     validate(cb) {
-      const tasks = this.$children
+      const tasks = this.fields
         .filter((item) => item.prop)
         .map((item) => item.validate());
       Promise.all(tasks)

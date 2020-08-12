@@ -3,6 +3,7 @@ import Vue from "vue";
 export function create(Component, props) {
   const Ctor = Vue.extend(Component);
   const comp = new Ctor({ propsData: props }).$mount();
+  console.log("comp", comp.$el);
   document.body.appendChild(comp.$el);
   // const comp = vm.$children[0];
   comp.remove = () => {

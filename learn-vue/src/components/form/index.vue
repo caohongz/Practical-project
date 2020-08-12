@@ -46,11 +46,6 @@ export default {
   methods: {
     onLogin() {
       this.$refs.form.validate((valid) => {
-        // if (valid) {
-        //   alert("校验成功，登陆！");
-        // } else {
-        //   alert("校验失败，请重试");
-        // }
         this.$notice({
           title: "村长喊你来搬砖",
           message: valid ? "校验成功，登陆！" : "校验失败，请重试",

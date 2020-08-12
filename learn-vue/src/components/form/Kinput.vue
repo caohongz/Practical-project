@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mixins } from "../../utils/mixins";
+import mixins from "@/mixins/mixins";
 export default {
   inheritAttrs: false,
   props: {
@@ -25,7 +25,7 @@ export default {
       this.$emit("input", e.target.value);
       // this.$parent.$emit("validate");
       // console.log(this);
-      this.findParent(this, "KFormItem", "validate");
+      this.dispatch("KFormItem", "validate");
     },
   },
 };
