@@ -1,26 +1,26 @@
 import Vue from "vue";
 import App from "./App.vue";
 
-import store from "./store";
-import { router } from "./router/index";
+import store from "./kstore";
+import { router } from "./krouter";
 import "./plugins/element.js";
 import { create } from "./utils/create";
 import Notice from "@/components/Notice";
 
 Vue.config.productionTip = false;
 
-router.beforeEach((to, from, next) => {
-  // 判断路由是否需要守卫
-  if (to.meta.auth) {
-    if (store.state.user.isLogin) {
-      next();
-    } else {
-      next("/login?redirect=" + to.fullPath);
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   // 判断路由是否需要守卫
+//   if (to.meta.auth) {
+//     if (store.state.user.isLogin) {
+//       next();
+//     } else {
+//       next("/login?redirect=" + to.fullPath);
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 class Bus {
   constructor() {

@@ -1,18 +1,14 @@
-import VueRouter from "../krouter/node_modules/kvue-router";
+import VueRouter from "./kvue-router";
 import Vue from "vue";
-import Home from "../krouter/node_modules/@/views/Home";
-import Admin from "../krouter/node_modules/@/views/admin";
-import Detail from "../krouter/node_modules/@/views/Detail";
+import Home from "@/views/Home";
+import Admin from "@/views/admin";
+import Detail from "@/views/Detail";
 
 Vue.use(VueRouter);
 
 const routes = [
   { path: "/", component: Home },
-  {
-    path: "/login",
-    name: "login",
-    component: () => import("../krouter/node_modules/@/views/Login"),
-  },
+  { path: "/login", name: "login", component: () => import("@/views/Login") },
   {
     path: "/admin",
     component: Admin,
@@ -36,15 +32,9 @@ const routes = [
     //   }
     // },
   },
-  {
-    path: "/child",
-    component: () => import("../krouter/node_modules/@/components/Bus/index"),
-  },
+  { path: "/child", component: () => import("@/components/Bus") },
   // { path: "/course/:name", component: Detail },
-  {
-    path: "*",
-    component: () => import("../krouter/node_modules/@/views/_404"),
-  },
+  { path: "*", component: () => import("@/views/_404") },
 ];
 
 export const router = new VueRouter({

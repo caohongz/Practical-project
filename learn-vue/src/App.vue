@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="nav">
+    <!-- <nav class="nav">
       <router-link to="/">首页</router-link>
       <router-link to="/admin">管理</router-link>
       <router-link to="/child">通信</router-link>
@@ -9,13 +9,18 @@
         <button @click="logout">注销</button>
       </span>
     </nav>
-    <router-view></router-view>
+    <router-view></router-view> -->
     <!-- <FormExample></FormExample> -->
+    <p @click="$store.commit('add')">counter: {{ $store.state.counter }}</p>
+    <p @click="$store.dispatch('add')">
+      async counter: {{ $store.state.counter }}
+    </p>
+    <p>{{ $store.getters.doubleCount }}</p>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+// import { mapState, mapGetters } from "vuex";
 // import FormExample from "./components/Form/index";
 // import TicTacToe from "./components/TicTacToe/index";
 export default {
@@ -71,29 +76,29 @@ export default {
   //     },
   //   };
   // },
-  computed: {
-    ...mapState("user", ["isLogin"]),
-    ...mapGetters("user", ["welcome"]),
-  },
-  methods: {
-    logout() {
-      this.$store.commit("user/logout");
-      this.$router.push("/");
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-  },
+  // computed: {
+  //   ...mapState("user", ["isLogin"]),
+  //   ...mapGetters("user", ["welcome"]),
+  // },
+  // methods: {
+  //   logout() {
+  //     this.$store.commit("user/logout");
+  //     this.$router.push("/");
+  //   },
+  //   submitForm(formName) {
+  //     this.$refs[formName].validate((valid) => {
+  //       if (valid) {
+  //         alert("submit!");
+  //       } else {
+  //         console.log("error submit!!");
+  //         return false;
+  //       }
+  //     });
+  //   },
+  //   resetForm(formName) {
+  //     this.$refs[formName].resetFields();
+  //   },
+  // },
 };
 </script>
 
