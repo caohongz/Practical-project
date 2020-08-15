@@ -1,25 +1,27 @@
 <template>
   <div id="app">
-    <!-- <nav class="nav">
+    <nav class="nav">
       <router-link to="/">首页</router-link>
-      <router-link to="/admin">管理</router-link>
+      <router-link to="/about">管理</router-link>
       <router-link to="/child">通信</router-link>
       <span v-if="isLogin">
         {{ welcome }}
         <button @click="logout">注销</button>
       </span>
     </nav>
-    <router-view></router-view> -->
+    <router-view></router-view>
+    <!-- <Recursion></Recursion> -->
     <!-- <FormExample></FormExample> -->
-    <p @click="$store.commit('add')">counter: {{ $store.state.counter }}</p>
+    <!-- <p @click="$store.commit('add')">counter: {{ $store.state.counter }}</p>
     <p @click="$store.dispatch('add')">
       async counter: {{ $store.state.counter }}
     </p>
-    <p>{{ $store.getters.doubleCount }}</p>
+    <p>{{ $store.getters.doubleCount }}</p> -->
   </div>
 </template>
 
 <script>
+// import Recursion from "@/components/recursion/";
 // import { mapState, mapGetters } from "vuex";
 // import FormExample from "./components/Form/index";
 // import TicTacToe from "./components/TicTacToe/index";

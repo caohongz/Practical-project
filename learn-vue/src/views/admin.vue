@@ -22,7 +22,7 @@
     <CourseList :courses="courses"></CourseList>
     <p>{{ total }}</p>
     <!-- <keep-alive include="admin"> -->
-    <!-- <router-view></router-view> -->
+    <router-view></router-view>
     <!-- </keep-alive> -->
   </div>
 </template>

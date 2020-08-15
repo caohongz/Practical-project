@@ -1,8 +1,8 @@
 import VueRouter from "./kvue-router";
 import Vue from "vue";
 import Home from "@/views/Home";
-import Admin from "@/views/admin";
-import Detail from "@/views/Detail";
+import About from "@/views/About";
+// import Detail from "@/views/Detail";
 
 Vue.use(VueRouter);
 
@@ -10,13 +10,18 @@ const routes = [
   { path: "/", component: Home },
   { path: "/login", name: "login", component: () => import("@/views/Login") },
   {
-    path: "/admin",
-    component: Admin,
+    path: "/about",
+    name: "about",
+    component: About,
     children: [
       {
-        path: "course/:name",
-        name: "detail",
-        component: Detail,
+        path: "/about/info",
+        name: "Info",
+        component: {
+          render(h) {
+            return h("div", "info page");
+          },
+        },
       },
     ],
     meta: {
