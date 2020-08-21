@@ -150,6 +150,7 @@ class Watcher {
     Dep.target = null;
   }
   update() {
+    console.log("update");
     this.fn.call(this.vm, this.vm[this.key]);
   }
 }
