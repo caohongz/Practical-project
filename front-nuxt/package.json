@@ -16,6 +16,8 @@
     "element-ui": "^2.13.2",
     "md5": "^2.3.0",
     "nuxt": "^2.14.0",
+    "stylus": "^0.54.8",
+    "stylus-loader": "^3.0.2",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {

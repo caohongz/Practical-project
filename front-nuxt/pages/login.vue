@@ -7,21 +7,44 @@
       :rules="rules"
       ref="loginForm"
     >
-      <el-form-item prop="email">
-        <span><i class="el-icon-mobile"></i></span>
+      <el-form-item prop="email" label="邮箱">
+        <!-- <span><i class="el-icon-mobile"></i></span> -->
         <el-input v-model="form.email" placeholder="邮箱"></el-input>
       </el-form-item>
-      <el-form-item prop="passwd">
-        <span><i class="el-icon-lock"></i></span>
+      <el-form-item prop="passwd" label="密码">
+        <!-- <span><i class="el-icon-lock"></i></span> -->
         <el-input
           v-model="form.passwd"
           type="password"
           placeholder="密码"
         ></el-input>
       </el-form-item>
-      <el-form-item prop="captcha">
-        <el-input v-model="form.captcha" placeholder="验证码"></el-input>
+      <el-form-item prop="captcha" label="验证码">
+        <el-input
+          v-model="form.captcha"
+          placeholder="验证码"
+          style="width:160px"
+        ></el-input>
         <img @click="updateCaptcha" :src="captchaUrl" alt="" />
+      </el-form-item>
+      <el-form-item
+        prop="emailcode"
+        label="邮箱验证码"
+        class="captcha-container"
+      >
+        <div class="captcha">
+          <el-button
+            @click="sendEmailCode"
+            type="primary"
+            :disabled="send.timer > 0"
+            >{{ sendText }}</el-button
+          >
+          <el-input
+            style="width:160px"
+            v-model="form.emailcode"
+            placeholder="邮箱验证码"
+          ></el-input>
+        </div>
       </el-form-item>
       <el-form-item prop="" label="">
         <el-button type="primary" @click.native.prevent="handleLogin"
@@ -37,12 +60,24 @@ import md5 from "md5";
 
 export default {
   layout: "login",
+  computed: {
+    sendText() {
+      if (this.send.timer <= 0) {
+        return "发送";
+      }
+      return `${this.send.timer}秒`;
+    }
+  },
   data() {
     return {
+      send: {
+        timer: 0
+      },
       form: {
-        email: "hljchz@163.com",
+        email: "18511283565@163.com",
         passwd: "ahooge123",
-        captcha: ""
+        captcha: "",
+        emailcode: ""
       },
       rules: {
         email: [
@@ -56,12 +91,23 @@ export default {
             pattern: /^[\w_-]{6,12}$/g,
             message: "请输入6~12位密码"
           }
-        ]
+        ],
+        emailcode: [{ required: true, message: "请输入邮箱验证码" }]
       },
       captchaUrl: "/api/captcha?_t=" + new Date().getTime()
     };
   },
   methods: {
+    async sendEmailCode() {
+      let ret = await this.$http.get("/sendcode?email=" + this.form.email);
+      this.send.timer = 10;
+      this.timer = setInterval(() => {
+        this.send.timer -= 1;
+        if (this.send.timer === 0) {
+          clearInterval(this.timer);
+        }
+      }, 1000);
+    },
     updateCaptcha() {
       this.captchaUrl = "/api/captcha?_t=" + new Date().getTime();
     },
@@ -76,6 +122,7 @@ export default {
           };
           let ret = await this.$http.post("/user/login", obj);
           if (ret.code == 0) {
+            localStorage.setItem("token", res.data.token);
             this.$alert("登陆成功", "成功", {
               confirmButtonText: "去首页",
               callback: () => {
@@ -94,38 +141,4 @@ export default {
 };
 </script>
 
-<style>
-.login-form {
-  width: 800px;
-  margin: 50px auto;
-}
-.login-container {
-  width: 100%;
-  min-height: 100%;
-}
-.login-container .login-form {
-  width: 520px;
-  padding: 160px 0;
-  margin: 0 auto;
-}
-.title-container {
-  text-align: center;
-  margin: 20px;
-}
-.title-container img {
-  width: 200px;
-}
-.captcha-container {
-  width: 340px;
-  position: absolute;
-}
-.captcha-container .captcha {
-  position: absolute;
-  right: -110px;
-}
-.captcha-container .captcha img {
-  width: 90px;
-  height: 50px;
-  cursor: pointer;
-}
-</style>
+<style></style>
