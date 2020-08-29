@@ -36,7 +36,7 @@ class HomeController extends BaseController {
         email,
       },
       app.config.jwt.secret,
-      { expiresIn: "1h" }
+      { expiresIn: "24h" }
     );
     this.success({ token, email, nickname: user.nickname });
   }
@@ -49,7 +49,7 @@ class HomeController extends BaseController {
     }
 
     const { email, passwd, captcha, nickname } = ctx.request.body;
-    console.log(email, passwd, captcha, nickname);
+    // console.log(email, passwd, captcha, nickname);
     if (captcha.toUpperCase() === ctx.session.captcha.toUpperCase()) {
       if (await this.checkEmail(email)) {
         this.error("邮箱重复啦", -65);
@@ -76,7 +76,24 @@ class HomeController extends BaseController {
     return user;
   }
   async verify() {}
-  async info() {}
+  async info() {
+    const { ctx } = this;
+    const { email } = ctx.state;
+    const user = await this.checkEmail(email);
+    this.success(user);
+  }
+  async reset() {
+    const { ctx } = this;
+    const email = ctx.query.email;
+    const ret = await ctx.model.User.findOneAndUpdate(
+      { email },
+      { $set: { passwd: md5(md5("ac2020") + HashSalt) } }
+    );
+    // const ret = await this.checkEmail(email);
+    console.log(ret);
+
+    this.success("重置成功");
+  }
 }
 
 module.exports = HomeController;

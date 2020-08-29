@@ -44,9 +44,9 @@ export default {
   data() {
     return {
       form: {
-        email: "18511283565@163.com",
+        email: "hljchz@163.com",
         nickname: "chz",
-        passwd: "ahooge123",
+        passwd: "ac2020",
         repasswd: "ahooge123",
         captcha: ""
       },

@@ -74,8 +74,8 @@ export default {
         timer: 0
       },
       form: {
-        email: "18511283565@163.com",
-        passwd: "ahooge123",
+        email: "hljchz@163.com",
+        passwd: "ac2020",
         captcha: "",
         emailcode: ""
       },
@@ -118,11 +118,12 @@ export default {
           let obj = {
             email: this.form.email,
             passwd: md5(this.form.passwd),
-            captcha: this.form.captcha
+            captcha: this.form.captcha,
+            emailcode: this.form.emailcode
           };
           let ret = await this.$http.post("/user/login", obj);
           if (ret.code == 0) {
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", ret.data.token);
             this.$alert("登陆成功", "成功", {
               confirmButtonText: "去首页",
               callback: () => {
