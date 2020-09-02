@@ -19,6 +19,14 @@ module.exports = (appInfo) => {
     mode: "file",
     whitelist: () => true,
   };
+  config.sequelize = {
+    dialect: "mysql",
+    host: "127.0.0.1",
+    port: 3306,
+    username: "chz",
+    password: "ahooge123",
+    database: "ioe-app",
+  };
   config.UPLOAD_DIR = path.resolve(__dirname, "..", "app/public");
   // add your middleware config here
   config.middleware = [];
@@ -34,12 +42,6 @@ module.exports = (appInfo) => {
     security: {
       csrf: {
         enable: false,
-      },
-    },
-    mongoose: {
-      client: {
-        url: "mongodb://127.0.0.1:27017/kkb-chz",
-        options: {},
       },
     },
     jwt: {

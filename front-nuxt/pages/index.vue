@@ -1,34 +1,30 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        front-nuxt
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+    <!-- <VirtualList :listData="articles" :size="300"></VirtualList> -->
+    <!-- <div v-for="article in articles" :key="article.id">
+      {{ article.title }}
+    </div> -->
   </div>
 </template>
 
 <script>
-export default {}
+import VirtualList from "@/components/VirtualList.vue";
+export default {
+  data() {
+    return {
+      articles: []
+    };
+  },
+  async mounted() {
+    // let ret = await this.$http.get("/article");
+    // if (ret.code == 0) {
+    //   this.articles = ret.data;
+    // }
+  },
+  components: {
+    VirtualList
+  }
+};
 </script>
 
 <style>
@@ -42,16 +38,8 @@ export default {}
 }
 
 .title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
